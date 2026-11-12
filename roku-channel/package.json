@@ -1,0 +1,15 @@
+{
+  "name": "roku-couch-channel",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Couch Dashboard - ambient SceneGraph channel for Roku",
+  "scripts": {
+    "build": "bash tools/build.sh",
+    "validate": "bsc --create-package false",
+    "lint": "bslint"
+  },
+  "devDependencies": {
+    "brighterscript": "^0.69.0",
+    "@rokucommunity/bslint": "^0.8.0"
+  }
+}

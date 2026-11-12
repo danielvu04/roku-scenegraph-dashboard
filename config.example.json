@@ -1,0 +1,9 @@
+{
+  "roku_ip": "",
+  "bridge_port": 8787,
+  "location": { "name": "Minneapolis", "lat": 44.98, "lon": -93.27 },
+  "units": "fahrenheit",
+  "clock_24h": false,
+  "background_seconds": 45,
+  "favorites": []
+}

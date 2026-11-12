@@ -1,0 +1,29 @@
+# systemd unit for the roku-couch bridge (e.g. on a Raspberry Pi).
+#
+#   sudo cp couch-bridge.service /etc/systemd/system/
+#   # edit User= and the paths below to match your checkout
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable --now couch-bridge
+#   journalctl -u couch-bridge -f        # logs (one line per request)
+
+[Unit]
+Description=roku-couch bridge + phone remote
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/home/pi/roku-couch/bridge
+ExecStart=/usr/bin/python3 /home/pi/roku-couch/bridge/couch_bridge.py --config /home/pi/roku-couch/config.json
+Restart=on-failure
+RestartSec=5
+Environment=PYTHONUNBUFFERED=1
+# Light hardening; the bridge only needs the network and read access to its files.
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=read-only
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

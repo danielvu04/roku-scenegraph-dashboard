@@ -1,0 +1,310 @@
+:root {
+  --bg: #0e0c1c;
+  --bg-2: #17142b;
+  --surface: #1f1b38;
+  --surface-2: #2a2549;
+  --border: rgba(255, 255, 255, 0.08);
+  --text: #ece9ff;
+  --muted: #9a94bd;
+  --accent: #a78bfa;
+  --accent-ink: #1a1033;
+  --ok: #4ade80;
+  --bad: #f87171;
+  --warn: #fbbf24;
+  --radius: 18px;
+  --tap: 64px;
+  --gap: 12px;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  background: radial-gradient(120% 60% at 50% 0%, #2c1654 0%, var(--bg) 60%) fixed, var(--bg);
+  color: var(--text);
+  font: 16px/1.4 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior-y: contain;
+}
+
+.app {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: calc(12px + var(--safe-top)) calc(16px + var(--safe-right))
+           calc(28px + var(--safe-bottom)) calc(16px + var(--safe-left));
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+button:focus-visible, input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+svg {
+  width: 26px;
+  height: 26px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  pointer-events: none;
+}
+svg .fill { fill: currentColor; stroke: none; }
+
+/* Top bar + status pill */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.title { margin: 0; font-size: 22px; letter-spacing: 0.02em; }
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 70%;
+  min-height: 40px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.pill #status-text { overflow: hidden; text-overflow: ellipsis; }
+.dot { flex: none; width: 10px; height: 10px; border-radius: 50%; background: var(--muted); }
+.pill--ok .dot { background: var(--ok); box-shadow: 0 0 8px var(--ok); }
+.pill--bad .dot { background: var(--bad); }
+.pill--bad { color: #fecaca; }
+.pill--standby .dot { background: var(--warn); }
+
+/* Generic buttons */
+.row { display: grid; gap: var(--gap); }
+.row--3 { grid-template-columns: repeat(3, 1fr); }
+.row--4 { grid-template-columns: repeat(4, 1fr); }
+
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: var(--tap);
+  border-radius: var(--radius);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.35);
+  transition: transform 60ms ease, background 120ms ease;
+}
+.btn--accent { background: var(--accent); color: var(--accent-ink); }
+.btn--power { color: var(--bad); }
+.btn--wide { width: 100%; font-weight: 600; font-size: 17px; }
+
+.btn.is-pressed, .btn:active,
+.dpad__btn.is-pressed, .dpad__btn:active,
+.dpad__ok.is-pressed, .dpad__ok:active,
+.dpad__corner:active, .chip:active, .app-tile:active {
+  transform: scale(0.95);
+  background: var(--surface-2);
+}
+.btn--accent.is-pressed, .btn--accent:active { background: #c4b5fd; }
+
+/* D-pad */
+.dpad {
+  position: relative;
+  width: min(100%, 320px);
+  aspect-ratio: 1;
+  margin: 4px auto;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 40%, var(--surface-2), var(--surface) 70%);
+  border: 1px solid var(--border);
+  box-shadow: inset 0 0 0 10px rgba(0, 0, 0, 0.15), 0 10px 30px rgba(0, 0, 0, 0.4);
+  display: grid;
+  grid-template: 1fr 1.15fr 1fr / 1fr 1.15fr 1fr;
+}
+.dpad__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 24px;
+  color: var(--text);
+}
+.dpad__btn svg { width: 36px; height: 36px; }
+.dpad__up { grid-area: 1 / 2; }
+.dpad__left { grid-area: 2 / 1; }
+.dpad__right { grid-area: 2 / 3; }
+.dpad__down { grid-area: 3 / 2; }
+.dpad__ok {
+  grid-area: 2 / 2;
+  margin: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-weight: 700;
+  font-size: 20px;
+  letter-spacing: 0.05em;
+  box-shadow: 0 4px 14px rgba(167, 139, 250, 0.35);
+}
+.dpad__ok.is-pressed, .dpad__ok:active { background: #c4b5fd; }
+.dpad__corner {
+  position: absolute;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  font-size: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.dpad__info { top: 4%; right: 4%; }
+
+.note {
+  margin: -6px 0 0;
+  font-size: 12px;
+  color: var(--muted);
+  text-align: center;
+}
+
+/* Cards with inputs */
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px;
+  border-radius: var(--radius);
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+.field { display: flex; gap: 8px; margin: 0; }
+.field input {
+  flex: 1;
+  min-width: 0;
+  min-height: 48px;
+  padding: 0 14px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--bg-2);
+  color: var(--text);
+  font-size: 16px; /* >=16px prevents iOS zoom on focus */
+}
+.field input::placeholder { color: var(--muted); }
+.field-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+.chip {
+  min-height: 48px;
+  padding: 0 16px;
+  border-radius: 12px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.chip--ghost { min-height: 36px; background: transparent; color: var(--muted); font-weight: 500; }
+
+/* Apps */
+.section-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.section-head h2 { margin: 0; font-size: 18px; }
+.apps {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+  gap: 10px;
+}
+.app-tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 6px;
+  padding: 6px;
+  border-radius: 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  text-align: center;
+  font-size: 12px;
+  color: var(--muted);
+}
+.app-tile img, .app-tile .app-fallback {
+  width: 100%;
+  aspect-ratio: 290 / 218; /* Roku icon proportions */
+  border-radius: 10px;
+  object-fit: cover;
+  background: var(--bg-2);
+}
+.app-tile .app-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--text);
+}
+.app-tile span.name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.app-tile.is-fav::after {
+  content: "★";
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  color: var(--warn);
+  font-size: 14px;
+  text-shadow: 0 1px 2px #000;
+}
+.muted { color: var(--muted); margin: 0; font-size: 14px; }
+
+/* Toast */
+.toast {
+  position: fixed;
+  left: calc(16px + var(--safe-left));
+  right: calc(16px + var(--safe-right));
+  bottom: calc(16px + var(--safe-bottom));
+  max-width: 448px;
+  margin: 0 auto;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: #3b1520;
+  border: 1px solid rgba(248, 113, 113, 0.5);
+  color: #fee2e2;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 14px;
+  z-index: 10;
+  animation: toast-in 160ms ease-out;
+}
+.toast[hidden] { display: none; }
+.toast--info { background: #1e2a3b; border-color: rgba(167, 139, 250, 0.5); color: var(--text); }
+.toast span:empty { display: none; }
+@keyframes toast-in { from { transform: translateY(20px); opacity: 0; } to { transform: none; opacity: 1; } }
+
+@media (min-width: 520px) {
+  .app { padding-top: calc(24px + var(--safe-top)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}

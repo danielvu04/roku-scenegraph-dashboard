@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Background fetch of current conditions from Open-Meteo.
+  Runs on its own thread; HomeScene creates a fresh instance per refresh,
+  sets the inputs and control="RUN", then observes "result".
+-->
+<component name="WeatherTask" extends="Task">
+    <interface>
+        <field id="lat" type="float" />
+        <field id="lon" type="float" />
+        <field id="units" type="string" value="fahrenheit" />
+        <!-- {ok: true, temp, hi, lo, code, text, icon} or {ok: false, error} -->
+        <field id="result" type="assocarray" alwaysNotify="true" />
+    </interface>
+    <script type="text/brightscript" uri="pkg:/components/WeatherTask.brs" />
+</component>

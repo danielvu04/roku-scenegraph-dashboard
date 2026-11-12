@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  HomeScene: full-screen crossfading backgrounds, a large clock + date and a
+  small weather block. The info group drifts slowly to avoid burn-in.
+-->
+<component name="HomeScene" extends="Scene">
+    <interface>
+        <!-- main.brs observes this and closes the screen (exits the channel) -->
+        <field id="exitRequested" type="boolean" alwaysNotify="true" />
+    </interface>
+
+    <script type="text/brightscript" uri="pkg:/source/generated_config.brs" />
+    <script type="text/brightscript" uri="pkg:/components/HomeScene.brs" />
+
+    <children>
+        <Rectangle id="base" width="1920" height="1080" color="0x0E102CFF" />
+
+        <!-- Two stacked posters: bgB fades in/out over bgA -->
+        <Poster id="bgA" width="1920" height="1080" loadWidth="1920" loadHeight="1080" loadDisplayMode="scaleToZoom" />
+        <Poster id="bgB" width="1920" height="1080" loadWidth="1920" loadHeight="1080" loadDisplayMode="scaleToZoom" opacity="0" />
+
+        <!-- Soft dark vignette for text legibility on any background -->
+        <Poster id="scrim" uri="pkg:/images/scrim.png" width="1920" height="1080" loadDisplayMode="scaleToFill" />
+
+        <Group id="info" translation="[160, 400]">
+            <Label id="clockShadow" translation="[5, 6]" color="0x00000070">
+                <Font role="font" uri="font:BoldSystemFontFile" size="190" />
+            </Label>
+            <Label id="clock" color="0xFFFFFFFF">
+                <Font role="font" uri="font:BoldSystemFontFile" size="190" />
+            </Label>
+
+            <Label id="ampmShadow" translation="[3, 34]" color="0x00000070">
+                <Font role="font" uri="font:BoldSystemFontFile" size="60" />
+            </Label>
+            <Label id="ampm" translation="[0, 30]" color="0xFFFFFFE6">
+                <Font role="font" uri="font:BoldSystemFontFile" size="60" />
+            </Label>
+
+            <Label id="dateShadow" translation="[11, 233]" color="0x00000070">
+                <Font role="font" uri="font:SystemFontFile" size="58" />
+            </Label>
+            <Label id="date" translation="[8, 230]" color="0xFFFFFFE6">
+                <Font role="font" uri="font:SystemFontFile" size="58" />
+            </Label>
+
+            <!-- Hidden until the first successful fetch; hidden again if data goes stale -->
+            <Group id="weather" translation="[8, 330]" visible="false">
+                <Poster id="wxIcon" width="112" height="112" loadDisplayMode="scaleToFit" />
+
+                <Label id="tempShadow" translation="[137, 8]" color="0x00000070">
+                    <Font role="font" uri="font:BoldSystemFontFile" size="92" />
+                </Label>
+                <Label id="temp" translation="[134, 5]" color="0xFFFFFFFF">
+                    <Font role="font" uri="font:BoldSystemFontFile" size="92" />
+                </Label>
+
+                <Label id="wxTextShadow" translation="[3, 133]" color="0x00000070">
+                    <Font role="font" uri="font:SystemFontFile" size="44" />
+                </Label>
+                <Label id="wxText" translation="[0, 130]" color="0xFFFFFFE6">
+                    <Font role="font" uri="font:SystemFontFile" size="44" />
+                </Label>
+
+                <Label id="placeShadow" translation="[3, 191]" color="0x00000070">
+                    <Font role="font" uri="font:SystemFontFile" size="34" />
+                </Label>
+                <Label id="place" translation="[0, 188]" color="0xFFFFFFB3">
+                    <Font role="font" uri="font:SystemFontFile" size="34" />
+                </Label>
+            </Group>
+        </Group>
+
+        <Animation id="fadeAnim" duration="2.5" easeFunction="inOutCubic" repeat="false">
+            <FloatFieldInterpolator id="fadeInterp" key="[0.0, 1.0]" keyValue="[0.0, 1.0]" fieldToInterp="bgB.opacity" />
+        </Animation>
+
+        <Animation id="driftAnim" duration="12" easeFunction="inOutQuad" repeat="false">
+            <Vector2DFieldInterpolator id="driftInterp" key="[0.0, 1.0]" keyValue="[[160, 400], [160, 400]]" fieldToInterp="info.translation" />
+        </Animation>
+
+        <Timer id="clockTimer" repeat="true" duration="1" />
+        <Timer id="bgTimer" repeat="true" duration="45" />
+        <Timer id="bgLoadTimeout" repeat="false" duration="5" />
+        <Timer id="driftTimer" repeat="true" duration="180" />
+        <Timer id="weatherTimer" repeat="false" duration="900" />
+    </children>
+</component>

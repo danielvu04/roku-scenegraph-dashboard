@@ -1,0 +1,8 @@
+config.json
+node_modules/
+dist/
+build/
+__pycache__/
+*.pyc
+generated_config.brs
+.DS_Store

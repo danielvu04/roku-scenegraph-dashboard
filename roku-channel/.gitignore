@@ -1,0 +1,5 @@
+node_modules/
+dist/
+build/
+source/generated_config.brs
+.DS_Store
