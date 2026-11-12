@@ -13,7 +13,7 @@
     <script type="text/brightscript" uri="pkg:/components/HomeScene.brs" />
 
     <children>
-        <Rectangle id="base" width="1920" height="1080" color="0x0E102CFF" />
+        <Rectangle id="base" width="1920" height="1080" color="0x0B0B0DFF" />
 
         <!-- Two stacked posters: bgB fades in/out over bgA -->
         <Poster id="bgA" width="1920" height="1080" loadWidth="1920" loadHeight="1080" loadDisplayMode="scaleToZoom" />
@@ -22,67 +22,118 @@
         <!-- Soft dark vignette for text legibility on any background -->
         <Poster id="scrim" uri="pkg:/images/scrim.png" width="1920" height="1080" loadDisplayMode="scaleToFill" />
 
-        <Group id="info" translation="[160, 400]">
-            <Label id="clockShadow" translation="[5, 6]" color="0x00000070">
-                <Font role="font" uri="font:BoldSystemFontFile" size="190" />
+        <Group id="info" translation="[160, 340]">
+            <Label id="clockShadow" translation="[5, 6]" color="0x00000040">
+                <Font role="font" uri="pkg:/fonts/InterDisplay-SemiBold.otf" size="190" />
             </Label>
             <Label id="clock" color="0xFFFFFFFF">
-                <Font role="font" uri="font:BoldSystemFontFile" size="190" />
+                <Font role="font" uri="pkg:/fonts/InterDisplay-SemiBold.otf" size="190" />
             </Label>
 
-            <Label id="ampmShadow" translation="[3, 34]" color="0x00000070">
-                <Font role="font" uri="font:BoldSystemFontFile" size="60" />
+            <Label id="ampmShadow" translation="[3, 34]" color="0x00000040">
+                <Font role="font" uri="pkg:/fonts/Inter-Medium.otf" size="60" />
             </Label>
-            <Label id="ampm" translation="[0, 30]" color="0xFFFFFFE6">
-                <Font role="font" uri="font:BoldSystemFontFile" size="60" />
+            <Label id="ampm" translation="[0, 30]" color="0xEBEBF599">
+                <Font role="font" uri="pkg:/fonts/Inter-Medium.otf" size="60" />
             </Label>
 
-            <Label id="dateShadow" translation="[11, 233]" color="0x00000070">
-                <Font role="font" uri="font:SystemFontFile" size="58" />
+            <Label id="dateShadow" translation="[3, 233]" color="0x00000040">
+                <Font role="font" uri="pkg:/fonts/Inter-Medium.otf" size="58" />
             </Label>
-            <Label id="date" translation="[8, 230]" color="0xFFFFFFE6">
-                <Font role="font" uri="font:SystemFontFile" size="58" />
+            <Label id="date" translation="[0, 230]" color="0xEBEBF5CC">
+                <Font role="font" uri="pkg:/fonts/Inter-Medium.otf" size="58" />
             </Label>
 
             <!-- Hidden until the first successful fetch; hidden again if data goes stale -->
-            <Group id="weather" translation="[8, 330]" visible="false">
+            <Group id="weather" translation="[44, 372]" visible="false">
+                <!-- rounded translucent panel behind the weather block (drawn first) -->
+                <Poster id="wxCard" uri="pkg:/images/card.png" translation="[-44, -40]" width="600" height="300" loadDisplayMode="scaleToFill" opacity="0.5" />
                 <Poster id="wxIcon" width="112" height="112" loadDisplayMode="scaleToFit" />
 
-                <Label id="tempShadow" translation="[137, 8]" color="0x00000070">
-                    <Font role="font" uri="font:BoldSystemFontFile" size="92" />
+                <Label id="tempShadow" translation="[137, 8]" color="0x00000040">
+                    <Font role="font" uri="pkg:/fonts/InterDisplay-SemiBold.otf" size="92" />
                 </Label>
                 <Label id="temp" translation="[134, 5]" color="0xFFFFFFFF">
-                    <Font role="font" uri="font:BoldSystemFontFile" size="92" />
+                    <Font role="font" uri="pkg:/fonts/InterDisplay-SemiBold.otf" size="92" />
                 </Label>
 
-                <Label id="wxTextShadow" translation="[3, 133]" color="0x00000070">
-                    <Font role="font" uri="font:SystemFontFile" size="44" />
+                <Label id="wxTextShadow" translation="[3, 133]" color="0x00000040">
+                    <Font role="font" uri="pkg:/fonts/Inter-Regular.otf" size="44" />
                 </Label>
-                <Label id="wxText" translation="[0, 130]" color="0xFFFFFFE6">
-                    <Font role="font" uri="font:SystemFontFile" size="44" />
+                <Label id="wxText" translation="[0, 130]" color="0xFFFFFFFF">
+                    <Font role="font" uri="pkg:/fonts/Inter-Regular.otf" size="44" />
                 </Label>
 
-                <Label id="placeShadow" translation="[3, 191]" color="0x00000070">
-                    <Font role="font" uri="font:SystemFontFile" size="34" />
+                <Label id="placeShadow" translation="[3, 191]" color="0x00000040">
+                    <Font role="font" uri="pkg:/fonts/Inter-Regular.otf" size="34" />
                 </Label>
-                <Label id="place" translation="[0, 188]" color="0xFFFFFFB3">
-                    <Font role="font" uri="font:SystemFontFile" size="34" />
+                <Label id="place" translation="[0, 188]" color="0xEBEBF599">
+                    <Font role="font" uri="pkg:/fonts/Inter-Regular.otf" size="34" />
                 </Label>
             </Group>
         </Group>
+
+        <!-- Bottom-right app row (Apple TV style): full-bleed icons; focus grows, lifts and casts a shadow -->
+        <Group id="appList" translation="[972, 852]" visible="false">
+            <Group id="tile0" translation="[0, 0]">
+                <Poster id="tileShadow0" translation="[-32, -22]" width="256" height="208" uri="pkg:/images/tile_shadow.png" opacity="0" />
+                <Poster id="tileImg0" width="192" height="144" loadWidth="384" loadHeight="288" loadDisplayMode="scaleToFill" />
+            </Group>
+            <Group id="tile1" translation="[220, 0]">
+                <Poster id="tileShadow1" translation="[-32, -22]" width="256" height="208" uri="pkg:/images/tile_shadow.png" opacity="0" />
+                <Poster id="tileImg1" width="192" height="144" loadWidth="384" loadHeight="288" loadDisplayMode="scaleToFill" />
+            </Group>
+            <Group id="tile2" translation="[440, 0]">
+                <Poster id="tileShadow2" translation="[-32, -22]" width="256" height="208" uri="pkg:/images/tile_shadow.png" opacity="0" />
+                <Poster id="tileImg2" width="192" height="144" loadWidth="384" loadHeight="288" loadDisplayMode="scaleToFill" />
+            </Group>
+            <Group id="tile3" translation="[660, 0]">
+                <Poster id="tileShadow3" translation="[-32, -22]" width="256" height="208" uri="pkg:/images/tile_shadow.png" opacity="0" />
+                <Poster id="tileImg3" width="192" height="144" loadWidth="384" loadHeight="288" loadDisplayMode="scaleToFill" />
+            </Group>
+        </Group>
+
+        <!-- Idle dim: opacity goes up after 10 minutes, any key wakes the screen -->
+        <Rectangle id="dimOverlay" width="1920" height="1080" color="0x000000FF" opacity="0" />
+
+        <Animation id="tileAnim0" duration="0.12" easeFunction="outCubic" repeat="false">
+            <Vector2DFieldInterpolator id="tileScale0" key="[0.0, 1.0]" keyValue="[[1.0, 1.0], [1.0, 1.0]]" fieldToInterp="tile0.scale" />
+            <Vector2DFieldInterpolator id="tilePos0" key="[0.0, 1.0]" keyValue="[[0, 0], [0, 0]]" fieldToInterp="tile0.translation" />
+        </Animation>
+        <Animation id="tileAnim1" duration="0.12" easeFunction="outCubic" repeat="false">
+            <Vector2DFieldInterpolator id="tileScale1" key="[0.0, 1.0]" keyValue="[[1.0, 1.0], [1.0, 1.0]]" fieldToInterp="tile1.scale" />
+            <Vector2DFieldInterpolator id="tilePos1" key="[0.0, 1.0]" keyValue="[[220, 0], [220, 0]]" fieldToInterp="tile1.translation" />
+        </Animation>
+        <Animation id="tileAnim2" duration="0.12" easeFunction="outCubic" repeat="false">
+            <Vector2DFieldInterpolator id="tileScale2" key="[0.0, 1.0]" keyValue="[[1.0, 1.0], [1.0, 1.0]]" fieldToInterp="tile2.scale" />
+            <Vector2DFieldInterpolator id="tilePos2" key="[0.0, 1.0]" keyValue="[[440, 0], [440, 0]]" fieldToInterp="tile2.translation" />
+        </Animation>
+        <Animation id="tileAnim3" duration="0.12" easeFunction="outCubic" repeat="false">
+            <Vector2DFieldInterpolator id="tileScale3" key="[0.0, 1.0]" keyValue="[[1.0, 1.0], [1.0, 1.0]]" fieldToInterp="tile3.scale" />
+            <Vector2DFieldInterpolator id="tilePos3" key="[0.0, 1.0]" keyValue="[[660, 0], [660, 0]]" fieldToInterp="tile3.translation" />
+        </Animation>
 
         <Animation id="fadeAnim" duration="2.5" easeFunction="inOutCubic" repeat="false">
             <FloatFieldInterpolator id="fadeInterp" key="[0.0, 1.0]" keyValue="[0.0, 1.0]" fieldToInterp="bgB.opacity" />
         </Animation>
 
+        <Animation id="appRevealAnim" duration="0.25" easeFunction="outCubic" repeat="false">
+            <FloatFieldInterpolator id="appRevealOpacity" key="[0.0, 1.0]" keyValue="[0.0, 1.0]" fieldToInterp="appList.opacity" />
+            <Vector2DFieldInterpolator id="appRevealPos" key="[0.0, 1.0]" keyValue="[[972, 880], [972, 852]]" fieldToInterp="appList.translation" />
+        </Animation>
+        <Animation id="appHideAnim" duration="0.22" easeFunction="inCubic" repeat="false">
+            <FloatFieldInterpolator id="appHideOpacity" key="[0.0, 1.0]" keyValue="[1.0, 0.0]" fieldToInterp="appList.opacity" />
+            <Vector2DFieldInterpolator id="appHidePos" key="[0.0, 1.0]" keyValue="[[972, 852], [972, 880]]" fieldToInterp="appList.translation" />
+        </Animation>
         <Animation id="driftAnim" duration="12" easeFunction="inOutQuad" repeat="false">
-            <Vector2DFieldInterpolator id="driftInterp" key="[0.0, 1.0]" keyValue="[[160, 400], [160, 400]]" fieldToInterp="info.translation" />
+            <Vector2DFieldInterpolator id="driftInterp" key="[0.0, 1.0]" keyValue="[[160, 340], [160, 340]]" fieldToInterp="info.translation" />
         </Animation>
 
         <Timer id="clockTimer" repeat="true" duration="1" />
         <Timer id="bgTimer" repeat="true" duration="45" />
         <Timer id="bgLoadTimeout" repeat="false" duration="5" />
         <Timer id="driftTimer" repeat="true" duration="180" />
+        <Timer id="sleepTimer" repeat="false" duration="600" />
         <Timer id="weatherTimer" repeat="false" duration="900" />
     </children>
 </component>

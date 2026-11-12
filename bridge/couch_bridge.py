@@ -50,6 +50,8 @@ MAX_BODY_BYTES = 64 * 1024
 MAX_TEXT_CHARS = 500
 MAX_KEYWORD_CHARS = 200
 ICON_CACHE_ENTRIES = 256
+# ECP /search/browse "type" values the remote can ask for.
+SEARCH_TYPES = ("movie", "tv-show", "person", "channel", "game")
 
 DEFAULT_CONFIG: dict[str, Any] = {
     "roku_ip": "",
@@ -59,6 +61,8 @@ DEFAULT_CONFIG: dict[str, Any] = {
     "clock_24h": False,
     "background_seconds": 45,
     "favorites": [],
+    # Show the volume row on the phone remote. Turn off if the TV ignores volume keys.
+    "show_volume_buttons": True,
 }
 
 # ECP keys the remote is allowed to send. Literal characters go through
@@ -488,6 +492,7 @@ MIME_TYPES = {
     ".gif": "image/gif",
     ".webp": "image/webp",
     ".svg": "image/svg+xml",
+    ".otf": "font/otf",
     ".ico": "image/x-icon",
     ".txt": "text/plain; charset=utf-8",
 }
@@ -537,6 +542,7 @@ class BridgeServer(ThreadingHTTPServer):
         self.static_dir = os.path.realpath(static_dir)
         self.icon_cache = IconCache()
         self.favorites = [str(f) for f in (config.get("favorites") or [])]
+        self.show_volume_buttons = bool(config.get("show_volume_buttons", True))
         super().__init__(address, BridgeHandler)
 
 
@@ -704,6 +710,7 @@ class BridgeHandler(BaseHTTPRequestHandler):
                 "reachable": False,
                 "device": None,
                 "error": exc.message,
+                "show_volume_buttons": self.server.show_volume_buttons,
             }
             if exc.hint:
                 payload["hint"] = exc.hint
@@ -715,6 +722,7 @@ class BridgeHandler(BaseHTTPRequestHandler):
             "roku_ip": format_target(roku.locator.current()),
             "reachable": True,
             "device": device,
+            "show_volume_buttons": self.server.show_volume_buttons,
         })
 
     def api_key(self, key: str) -> None:
@@ -797,6 +805,11 @@ class BridgeHandler(BaseHTTPRequestHandler):
             params["provider-id"] = str(provider)
         if data.get("launch") is True:
             params["launch"] = "true"
+        search_type = data.get("type")
+        if search_type not in (None, ""):
+            if search_type not in SEARCH_TYPES:
+                raise BadRequest("'type' must be one of: " + ", ".join(SEARCH_TYPES))
+            params["type"] = search_type
         self.server.roku.search(params)
         self._json(200, {"ok": True, "keyword": keyword})
 

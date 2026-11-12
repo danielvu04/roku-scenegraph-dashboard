@@ -191,13 +191,26 @@
       });
   });
 
+  var searchType = "";
+  Array.prototype.forEach.call(document.querySelectorAll(".type-chips .chip"), function (chip) {
+    chip.addEventListener("click", function () {
+      searchType = chip.getAttribute("data-type") || "";
+      Array.prototype.forEach.call(document.querySelectorAll(".type-chips .chip"), function (c) {
+        c.classList.toggle("is-on", c === chip);
+      });
+      buzz();
+    });
+  });
+
   $("search-form").addEventListener("submit", function (ev) {
     ev.preventDefault();
     var input = $("search-input");
     var keyword = input.value.trim();
     if (!keyword) return;
     buzz();
-    api("POST", "/api/search", { keyword: keyword })
+    var body = { keyword: keyword, launch: true };
+    if (searchType) body.type = searchType;
+    api("POST", "/api/search", body)
       .then(function () {
         toast("Searching for “" + keyword + "”", "", "info");
         input.blur();
@@ -223,8 +236,20 @@
     pill.title = title || "Tap to refresh";
   }
 
+  function refreshNowPlaying() {
+    api("GET", "/api/active-app").then(function (data) {
+      var el = $("now");
+      var name = data && data.app && data.app.name;
+      el.textContent = name ? "Now playing: " + name : "On the Roku home screen";
+      el.hidden = false;
+    }).catch(function () { $("now").hidden = true; });
+  }
+
   function refreshStatus() {
+    refreshNowPlaying();
     return api("GET", "/api/status").then(function (data) {
+      var volumeRow = document.getElementById("volume-row");
+      if (volumeRow) volumeRow.hidden = data.show_volume_buttons === false;
       statusInfo = data;
       if (data.reachable && data.device) {
         var dev = data.device;
@@ -250,6 +275,26 @@
 
   // ---------------------------------------------------------------- apps
 
+  // Pinned apps first, then popular ones; everything else alphabetically.
+  var PINNED = ["netflix", "youtube", "cartoon network"];
+  var POPULAR = ["prime video", "disney+", "hulu", "hbo max", "max", "peacock",
+                 "paramount+", "tubi", "pluto tv", "plex", "apple tv", "spotify"];
+
+  function appRank(name) {
+    var n = (name || "").toLowerCase();
+    var i, j;
+    for (i = 0; i < PINNED.length; i++) if (n.indexOf(PINNED[i]) !== -1) return i;
+    for (j = 0; j < POPULAR.length; j++) if (n.indexOf(POPULAR[j]) !== -1) return PINNED.length + j;
+    return PINNED.length + POPULAR.length;
+  }
+
+  function sortApps(apps) {
+    return apps.slice().sort(function (a, b) {
+      var d = appRank(a.name) - appRank(b.name);
+      return d !== 0 ? d : (a.name || "").localeCompare(b.name || "");
+    });
+  }
+
   function renderApps(apps) {
     var grid = $("apps");
     grid.textContent = "";
@@ -260,7 +305,7 @@
       grid.appendChild(empty);
       return;
     }
-    apps.forEach(function (app) {
+    sortApps(apps).forEach(function (app) {
       var tile = document.createElement("button");
       tile.type = "button";
       tile.className = "app-tile" + (app.favorite ? " is-fav" : "");
@@ -308,6 +353,21 @@
       grid.appendChild(p);
     });
   }
+
+  Array.prototype.forEach.call(document.querySelectorAll(".tab"), function (tab) {
+    tab.addEventListener("click", function () {
+      var name = tab.getAttribute("data-tab");
+      Array.prototype.forEach.call(document.querySelectorAll(".tab"), function (t) {
+        var on = t === tab;
+        t.classList.toggle("is-active", on);
+        t.setAttribute("aria-selected", on ? "true" : "false");
+      });
+      Array.prototype.forEach.call(document.querySelectorAll(".pane"), function (p) {
+        p.classList.toggle("is-active", p.getAttribute("data-pane") === name);
+      });
+      buzz();
+    });
+  });
 
   $("apps-refresh").addEventListener("click", function () {
     buzz();

@@ -25,6 +25,10 @@ sub init()
     m.bgA = m.top.findNode("bgA")
     m.bgB = m.top.findNode("bgB")
     m.fadeAnim = m.top.findNode("fadeAnim")
+    m.appRevealAnim = m.top.findNode("appRevealAnim")
+    m.appHideAnim = m.top.findNode("appHideAnim")
+    m.appHideAnim.observeField("state", "onHideDone")
+    m.hiding = false
     m.fadeInterp = m.top.findNode("fadeInterp")
     m.bgLoadTimeout = m.top.findNode("bgLoadTimeout")
     m.bgA.observeField("loadStatus", "onBgLoadStatus")
@@ -58,6 +62,21 @@ sub init()
     m.weatherTimer = m.top.findNode("weatherTimer")
     m.weatherTimer.observeField("fire", "startWeatherFetch")
     startWeatherFetch()
+
+    ' --- app shortcuts and idle dim -----------------------------------------
+    m.appList = m.top.findNode("appList")
+    m.dimOverlay = m.top.findNode("dimOverlay")
+    m.sleepTimer = m.top.findNode("sleepTimer")
+    m.sleepTimer.observeField("fire", "onSleep")
+    m.sleepTimer.control = "start"
+    m.dimmed = false
+    m.appFocus = -1
+    ' IDs are Roku's standard channel IDs; check them on your device (ECP /query/apps).
+    m.apps = [{name: "Netflix", id: "12"}, {name: "YouTube", id: "837"}, {name: "Prime Video", id: "13"}, {name: "Hulu", id: "2285"}]
+    for i = 0 to m.apps.Count() - 1
+        m.appList.findNode("tileImg" + i.ToStr()).uri = "pkg:/images/app_icon_" + m.apps[i].id + ".png"
+    end for
+    highlightApp()
 
     m.top.setFocus(true)
     m.top.signalBeacon("AppLaunchComplete")
@@ -142,6 +161,8 @@ sub onBgLoadStatus(event as Object)
     if status = "ready"
         startCrossfade()
     else if status = "failed"
+        ' Clearing uri (see showBackground) reports "failed" for the empty path; ignore it.
+        if poster.uri = "" then return
         print "HomeScene: failed to load "; poster.uri
         m.pendingPoster = invalid
         m.bgLoadTimeout.control = "stop"
@@ -171,7 +192,7 @@ end sub
 sub onDrift()
     if m.driftAnim.state = "running" then return
     current = m.info.translation
-    target = [100 + Rnd(220), 330 + Rnd(110)]
+    target = [100 + Rnd(220), 280 + Rnd(110)] ' bottom stays inside title-safe area
     m.driftInterp.keyValue = [current, target]
     m.driftAnim.control = "start"
 end sub
@@ -239,8 +260,34 @@ end sub
 
 function onKeyEvent(key as String, press as Boolean) as Boolean
     if not press then return false
+
+    ' Any key press counts as activity: restart the idle timer.
+    m.sleepTimer.control = "stop"
+    m.sleepTimer.control = "start"
+    if m.dimmed
+        m.dimmed = false
+        m.dimOverlay.opacity = 0
+        return true ' the key that wakes the screen is not passed on
+    end if
+
+    if m.appFocus >= 0
+        if key = "right"
+            moveAppFocus(1)
+        else if key = "left"
+            moveAppFocus(-1)
+        else if key = "OK"
+            launchApp(m.apps[m.appFocus].id)
+        else if key = "back" or key = "up" or key = "down"
+            exitAppRow()
+        end if
+        return true
+    end if
+
     if key = "back"
         m.top.exitRequested = true
+        return true
+    else if key = "down"
+        enterAppRow()
         return true
     else if key = "right" or key = "fastforward"
         showBackground(1)
@@ -254,3 +301,87 @@ function onKeyEvent(key as String, press as Boolean) as Boolean
     end if
     return false
 end function
+
+' ================================================================ app row
+
+sub enterAppRow()
+    if m.hiding
+        m.appHideAnim.control = "stop"
+        m.hiding = false
+    end if
+    m.appList.visible = true
+    m.appFocus = 0
+    ' slide up 28px and fade in; the row starts hidden-looking so the motion is visible
+    m.appList.opacity = 0
+    m.appList.translation = [972, 880]
+    m.appRevealAnim.control = "start"
+    highlightApp()
+end sub
+
+sub exitAppRow()
+    if m.appList.visible = false or m.hiding then return
+    m.appFocus = -1
+    ' fade and slide down, then hide in onHideDone so the exit matches the entrance
+    m.hiding = true
+    m.appHideAnim.control = "start"
+end sub
+
+sub onHideDone()
+    if m.appHideAnim.state = "stopped" and m.hiding
+        m.hiding = false
+        m.appList.visible = false
+    end if
+end sub
+
+sub moveAppFocus(delta as Integer)
+    target = m.appFocus + delta
+    if target < 0 or target >= m.apps.Count() then return
+    m.appFocus = target
+    highlightApp()
+end sub
+
+sub highlightApp()
+    for i = 0 to m.apps.Count() - 1
+        tile = m.appList.findNode("tile" + i.ToStr())
+        shadow = m.appList.findNode("tileShadow" + i.ToStr())
+        anim = m.top.findNode("tileAnim" + i.ToStr())
+        scaleI = m.top.findNode("tileScale" + i.ToStr())
+        posI = m.top.findNode("tilePos" + i.ToStr())
+        x = i * 220
+        ' Focused icon grows 12% from its center and lifts; the others rest.
+        if i = m.appFocus
+            targetScale = [1.16, 1.16]
+            targetPos = [x - 16, -16]
+            shadow.opacity = 1.0
+        else
+            targetScale = [1.0, 1.0]
+            targetPos = [x, 0]
+            shadow.opacity = 0.0
+        end if
+        anim.control = "stop"
+        scaleI.keyValue = [[tile.scale[0], tile.scale[1]], targetScale]
+        posI.keyValue = [[tile.translation[0], tile.translation[1]], targetPos]
+        anim.control = "start"
+    end for
+end sub
+
+' Asks the Roku's own ECP service to start an app. Not verified on hardware.
+sub launchApp(appId as String)
+    ' roUrlTransfer is task-only, so the request runs on a LaunchTask node.
+    if m.cfg.bridgeUrl = "" or m.cfg.bridgeUrl = invalid
+        print "HomeScene: no bridge_host in config.json, cannot launch " + appId
+        return
+    end if
+    m.launchTask = CreateObject("roSGNode", "LaunchTask")
+    m.launchTask.bridgeUrl = m.cfg.bridgeUrl
+    m.launchTask.appId = appId
+    m.launchTask.control = "RUN"
+end sub
+
+' ================================================================== idle dim
+
+sub onSleep()
+    exitAppRow()
+    m.dimmed = true
+    m.dimOverlay.opacity = 0.8
+end sub

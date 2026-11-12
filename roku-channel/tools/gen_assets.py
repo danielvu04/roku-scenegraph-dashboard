@@ -31,51 +31,23 @@ SW, SH = W // 4, H // 4
 # Each palette: vertical gradient stops (position, rgb) and light blobs
 # (rgb, cx, cy, radius, strength) in 0..1 coordinates of the small canvas.
 PALETTES = [
-    {   # deep dusk: indigo into ember
-        "stops": [(0.0, (14, 16, 44)), (0.55, (40, 26, 72)), (1.0, (92, 40, 58))],
-        "blobs": [((236, 120, 92), 0.78, 0.92, 0.45, 0.45),
-                  ((120, 80, 200), 0.15, 0.25, 0.40, 0.35)],
-    },
-    {   # northern lights over navy
-        "stops": [(0.0, (6, 12, 30)), (0.6, (10, 30, 52)), (1.0, (8, 20, 34))],
-        "blobs": [((40, 210, 160), 0.30, 0.35, 0.30, 0.45),
-                  ((60, 150, 220), 0.62, 0.28, 0.28, 0.35),
-                  ((150, 90, 220), 0.85, 0.45, 0.25, 0.30)],
-        "aurora": True,
-    },
-    {   # plum night
-        "stops": [(0.0, (22, 10, 34)), (0.5, (48, 18, 60)), (1.0, (18, 10, 30))],
-        "blobs": [((210, 80, 160), 0.70, 0.30, 0.40, 0.35),
-                  ((80, 60, 190), 0.20, 0.80, 0.45, 0.35)],
-    },
-    {   # teal ocean depth
-        "stops": [(0.0, (6, 26, 36)), (0.5, (8, 46, 58)), (1.0, (4, 18, 28))],
-        "blobs": [((40, 170, 180), 0.25, 0.30, 0.38, 0.35),
-                  ((30, 90, 160), 0.80, 0.75, 0.45, 0.35)],
-    },
-    {   # last light: slate to amber horizon
-        "stops": [(0.0, (16, 22, 40)), (0.62, (42, 44, 70)), (1.0, (110, 66, 46))],
-        "dim": 0.25,
-        "blobs": [((250, 170, 90), 0.50, 1.00, 0.55, 0.40),
-                  ((90, 110, 170), 0.10, 0.15, 0.35, 0.25)],
-    },
-    {   # forest night
-        "stops": [(0.0, (8, 20, 18)), (0.55, (16, 40, 32)), (1.0, (10, 24, 22))],
-        "blobs": [((80, 180, 120), 0.75, 0.25, 0.35, 0.30),
-                  ((30, 110, 120), 0.20, 0.70, 0.45, 0.30)],
-    },
-    {   # midnight rose
-        "stops": [(0.0, (18, 14, 30)), (0.5, (40, 22, 46)), (1.0, (70, 30, 50))],
-        "blobs": [((240, 110, 130), 0.30, 0.85, 0.40, 0.35),
-                  ((120, 90, 200), 0.80, 0.20, 0.35, 0.30)],
-    },
-    {   # blue hour
-        "stops": [(0.0, (8, 14, 40)), (0.5, (20, 40, 90)), (1.0, (30, 50, 96))],
-        "dim": 0.28,
-        "blobs": [((120, 170, 255), 0.65, 0.75, 0.45, 0.35),
-                  ((200, 140, 230), 0.15, 0.35, 0.30, 0.25)],
-        "aurora": True,
-    },
+    # Graphite bases with soft, low-saturation glows (tvOS / aerial feel).
+    {"stops": [(0.0, (10, 11, 14)), (0.6, (22, 24, 30)), (1.0, (12, 13, 16))],
+     "blobs": [((110, 140, 200), 0.80, 0.20, 0.40, 0.22), ((60, 70, 110), 0.15, 0.85, 0.40, 0.18)]},
+    {"stops": [(0.0, (12, 12, 14)), (0.55, (26, 24, 28)), (1.0, (12, 12, 14))],
+     "blobs": [((200, 150, 110), 0.20, 0.95, 0.45, 0.16), ((90, 100, 150), 0.85, 0.15, 0.35, 0.16)]},
+    {"stops": [(0.0, (8, 10, 14)), (0.5, (18, 24, 34)), (1.0, (8, 10, 14))],
+     "blobs": [((80, 130, 190), 0.50, 0.00, 0.50, 0.22), ((40, 60, 90), 0.10, 0.80, 0.40, 0.18)]},
+    {"stops": [(0.0, (12, 11, 16)), (0.6, (26, 22, 34)), (1.0, (12, 11, 16))],
+     "blobs": [((140, 110, 190), 0.85, 0.80, 0.40, 0.16), ((70, 80, 120), 0.15, 0.15, 0.35, 0.14)]},
+    {"stops": [(0.0, (10, 12, 13)), (0.5, (20, 26, 28)), (1.0, (10, 12, 13))],
+     "blobs": [((90, 150, 170), 0.25, 0.25, 0.42, 0.16), ((60, 80, 110), 0.80, 0.85, 0.40, 0.16)]},
+    {"stops": [(0.0, (11, 11, 12)), (0.6, (24, 24, 27)), (1.0, (11, 11, 12))],
+     "blobs": [((160, 170, 200), 0.50, 0.15, 0.45, 0.14), ((90, 90, 110), 0.90, 0.70, 0.30, 0.12)]},
+    {"stops": [(0.0, (12, 12, 15)), (0.62, (30, 28, 32)), (1.0, (20, 17, 16))],
+     "blobs": [((210, 140, 90), 0.30, 1.00, 0.46, 0.18), ((90, 110, 160), 0.80, 0.15, 0.30, 0.12)], "dim": 0.20},
+    {"stops": [(0.0, (9, 10, 13)), (0.5, (20, 23, 30)), (1.0, (9, 10, 13))],
+     "blobs": [((120, 150, 210), 0.85, 0.10, 0.36, 0.16), ((70, 80, 120), 0.15, 0.85, 0.36, 0.14)]},
 ]
 
 
@@ -161,7 +133,7 @@ def make_background(pal, seed):
     rng = random.Random(seed)
     img = gradient(SW, SH, pal["stops"])
     for rgb, cx, cy, r, s in pal["blobs"]:
-        img = add_blob(img, rgb, cx, cy, r, s)
+        img = add_blob(img, rgb, cx, cy, r, min(s * 1.9, 0.6))  # richer glow on graphite
     if pal.get("aurora"):
         img = add_aurora(img, rng, [b[0] for b in pal["blobs"][:2]])
     img = vignette(img)
@@ -344,6 +316,30 @@ def make_scrim(out):
     img.save(os.path.join(out, "scrim.png"), optimize=True)
 
 
+def make_card(out):
+    """Rounded translucent panel behind the weather block (2x supersampled).
+
+    Baked as a PNG so the channel needs no live blur (SceneGraph has none).
+    """
+    w, h, r, ss = 600, 300, 36, 2
+    W2, H2 = w * ss, h * ss
+    img = Image.new("RGBA", (W2, H2), (0, 0, 0, 0))
+    ImageDraw.Draw(img).rounded_rectangle(
+        (0, 0, W2 - 1, H2 - 1), radius=r * ss,
+        fill=(44, 44, 46, 175), outline=(255, 255, 255, 26), width=2 * ss)
+    # faint top sheen that fades out, clipped to the rounded shape
+    band = int(H2 * 0.35)
+    sheen = Image.new("RGBA", (W2, H2), (0, 0, 0, 0))
+    sd = ImageDraw.Draw(sheen)
+    for y in range(band):
+        sd.line((0, y, W2, y), fill=(255, 255, 255, int(18 * (1 - y / band))))
+    mask = Image.new("L", (W2, H2), 0)
+    ImageDraw.Draw(mask).rounded_rectangle((0, 0, W2 - 1, H2 - 1), radius=r * ss, fill=255)
+    sheen.putalpha(ImageChops.multiply(sheen.getchannel("A"), mask))
+    img = Image.alpha_composite(img, sheen)
+    img.resize((w, h), Image.LANCZOS).save(os.path.join(out, "card.png"), optimize=True)
+
+
 def main():
     here = os.path.dirname(os.path.abspath(__file__))
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
@@ -365,10 +361,14 @@ def main():
     icon_pal = PALETTES[1]
     make_icon(540, 405, icon_pal).save(os.path.join(out, "icon_focus_fhd.png"), optimize=True)
     make_icon(290, 218, icon_pal).save(os.path.join(out, "icon_focus_hd.png"), optimize=True)
-    make_splash(PALETTES[0]).save(os.path.join(out, "splash_fhd.jpg"), "JPEG",
-                                  quality=85, optimize=True)
+    splash = make_splash(PALETTES[0])
+    splash.save(os.path.join(out, "splash_fhd.jpg"), "JPEG", quality=85, optimize=True)
+    # HD (1280x720) splash: required by the channel store alongside FHD
+    splash.resize((1280, 720), Image.LANCZOS).save(
+        os.path.join(out, "splash_hd.jpg"), "JPEG", quality=85, optimize=True)
     make_weather_icons(out)
     make_scrim(out)
+    make_card(out)
     print("wrote icons, splash, weather icons and scrim")
 
     total = sum(os.path.getsize(os.path.join(out, f)) for f in os.listdir(out))

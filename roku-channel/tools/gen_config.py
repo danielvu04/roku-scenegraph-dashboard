@@ -102,6 +102,8 @@ def build(cfg):
         "lon": num(loc.get("lon"), d["location"]["lon"], -180, 180),
         "units": units,
         "clock24h": bool(cfg.get("clock_24h", d["clock_24h"])),
+        "bridgeUrl": ("http://%s:%d" % (str(cfg.get("bridge_host") or "").strip(), int(num(cfg.get("bridge_port"), 8787, 1, 65535)))) if str(cfg.get("bridge_host") or "").strip() else "",
+        "backgroundSource": "photos" if str(cfg.get("background_source", "all")).lower() == "photos" else "all",
         # clamp rather than reject: crossfades take ~2.5 s
         "bgSeconds": int(min(3600, max(10, num(cfg.get("background_seconds"),
                                                d["background_seconds"], -1e9, 1e9)))),
@@ -115,7 +117,9 @@ def main():
 
     raw, src = load_config(args.config)
     c = build(raw)
-    bgs = sorted(os.path.basename(p) for p in glob.glob(os.path.join(CHANNEL, "images", "bg_*.jpg")))
+    patterns = ("local_bg_*.jpg",) if c["backgroundSource"] == "photos" else ("bg_*.jpg", "local_bg_*.jpg")
+    bgs = sorted(os.path.basename(p) for pat in patterns
+                 for p in glob.glob(os.path.join(CHANNEL, "images", pat)))
     bg_list = ", ".join(brs_string("pkg:/images/" + b) for b in bgs)
 
     lines = [
@@ -131,6 +135,7 @@ def main():
         "        units: %s" % brs_string(c["units"]),
         "        clock24h: %s" % ("true" if c["clock24h"] else "false"),
         "        backgroundSeconds: %d" % c["bgSeconds"],
+        "        bridgeUrl: %s" % brs_string(c["bridgeUrl"]),
         "        backgrounds: [%s]" % bg_list,
         "    }",
         "end function",

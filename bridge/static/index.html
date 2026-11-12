@@ -20,104 +20,128 @@
   <main class="app">
     <header class="topbar">
       <h1 class="title">Couch</h1>
-      <button id="status" class="pill pill--unknown" type="button" aria-live="polite" title="Tap to refresh">
-        <span class="dot" aria-hidden="true"></span><span id="status-text">Connecting…</span>
-      </button>
+      <div class="topbar__right">
+        <button id="dashboard" class="chip chip--ghost" type="button" title="Show the dashboard on the TV">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+          <span class="hide-narrow">Dashboard</span>
+        </button>
+        <button id="status" class="pill pill--unknown" type="button" aria-live="polite" title="Tap to refresh">
+          <span class="dot" aria-hidden="true"></span><span id="status-text">Connecting…</span>
+        </button>
+      </div>
     </header>
 
-    <section class="row row--3" aria-label="System">
-      <button class="btn btn--power" data-key="Power" aria-label="Power" title="Power">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v9"/><path d="M6.3 6.8a8 8 0 1 0 11.4 0"/></svg>
-      </button>
-      <button class="btn" data-key="Back" aria-label="Back" title="Back">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/></svg>
-      </button>
-      <button class="btn" data-key="Home" aria-label="Home" title="Home">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11 12 3l9 8"/><path d="M5 10v10h14V10"/></svg>
-      </button>
-    </section>
+    <p id="now" class="now" hidden></p>
 
-    <section class="dpad" aria-label="Directional pad">
-      <button class="dpad__btn dpad__up" data-key="Up" data-repeat aria-label="Up">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 15 6-6 6 6"/></svg>
-      </button>
-      <button class="dpad__btn dpad__left" data-key="Left" data-repeat aria-label="Left">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 6-6 6 6 6"/></svg>
-      </button>
-      <button class="dpad__ok" data-key="Select" aria-label="OK">OK</button>
-      <button class="dpad__btn dpad__right" data-key="Right" data-repeat aria-label="Right">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
-      </button>
-      <button class="dpad__btn dpad__down" data-key="Down" data-repeat aria-label="Down">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
-      </button>
-      <button class="dpad__corner dpad__info" data-key="Info" aria-label="Options (star)" title="Options ✱">✱</button>
-    </section>
+    <nav class="tabs" role="tablist" aria-label="Remote sections">
+      <button class="tab is-active" type="button" role="tab" data-tab="remote" aria-selected="true">Remote</button>
+      <button class="tab" type="button" role="tab" data-tab="apps" aria-selected="false">Apps</button>
+      <button class="tab" type="button" role="tab" data-tab="keyboard" aria-selected="false">Keyboard</button>
+    </nav>
 
-    <section class="row row--4" aria-label="Media">
-      <button class="btn" data-key="Rev" aria-label="Rewind" title="Rewind">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path class="fill" d="M11 6 3 12l8 6zM21 6l-8 6 8 6z"/></svg>
-      </button>
-      <button class="btn btn--accent" data-key="Play" aria-label="Play / pause" title="Play / pause">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path class="fill" d="M4 5v14l9-7z"/><path d="M16 6v12M20 6v12"/></svg>
-      </button>
-      <button class="btn" data-key="Fwd" aria-label="Fast forward" title="Fast forward">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path class="fill" d="M3 6l8 6-8 6zM13 6l8 6-8 6z"/></svg>
-      </button>
-      <button class="btn" data-key="InstantReplay" aria-label="Instant replay" title="Instant replay">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>
-      </button>
-    </section>
+    <div class="remote-col">
+    <div class="pane is-active" data-pane="remote">
+      <section class="row row--4" aria-label="System">
+        <button class="btn btn--power" data-key="Power" aria-label="Power" title="Power">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v9"/><path d="M6.3 6.8a8 8 0 1 0 11.4 0"/></svg>
+        </button>
+        <button class="btn" data-key="Back" aria-label="Back" title="Back">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/></svg>
+        </button>
+        <button class="btn" data-key="Home" aria-label="Home" title="Home">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11 12 3l9 8"/><path d="M5 10v10h14V10"/></svg>
+        </button>
+        <button class="btn btn--labeled" data-key="Info" aria-label="Options" title="Options">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.6" class="fill"/><circle cx="12" cy="12" r="1.6" class="fill"/><circle cx="19" cy="12" r="1.6" class="fill"/></svg>
+          <span>Options</span>
+        </button>
+      </section>
 
-    <section class="row row--3" aria-label="Volume"
-             title="Volume keys only work when the Roku controls your TV's volume (HDMI-CEC or IR).">
-      <button class="btn" data-key="VolumeDown" data-repeat aria-label="Volume down">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path class="fill" d="M4 9h4l5-4v14l-5-4H4z"/><path d="M17 12h4"/></svg>
-      </button>
-      <button class="btn" data-key="VolumeMute" aria-label="Mute">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path class="fill" d="M4 9h4l5-4v14l-5-4H4z"/><path d="m16 9 5 6M21 9l-5 6"/></svg>
-      </button>
-      <button class="btn" data-key="VolumeUp" data-repeat aria-label="Volume up">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path class="fill" d="M4 9h4l5-4v14l-5-4H4z"/><path d="M17 12h4M19 10v4"/></svg>
-      </button>
-    </section>
-    <p class="note">Volume works only if the Roku controls your TV volume (HDMI-CEC or IR).</p>
+      <section class="dpad" aria-label="Directional pad">
+        <button class="dpad__btn dpad__up" data-key="Up" data-repeat aria-label="Up">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 15 6-6 6 6"/></svg>
+        </button>
+        <button class="dpad__btn dpad__left" data-key="Left" data-repeat aria-label="Left">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 6-6 6 6 6"/></svg>
+        </button>
+        <button class="dpad__ok" data-key="Select" aria-label="OK">OK</button>
+        <button class="dpad__btn dpad__right" data-key="Right" data-repeat aria-label="Right">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
+        </button>
+        <button class="dpad__btn dpad__down" data-key="Down" data-repeat aria-label="Down">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+      </section>
 
-    <section class="card" aria-label="Keyboard">
-      <form id="text-form" class="field" autocomplete="off">
-        <input id="text-input" type="text" inputmode="text" enterkeyhint="send"
-               placeholder="Type on the TV…" aria-label="Text to send" maxlength="500"
-               autocapitalize="off" autocorrect="off" spellcheck="false">
-        <button class="chip" type="submit">Send</button>
-      </form>
-      <div class="field-actions">
-        <button class="chip" type="button" data-key="Backspace" data-repeat aria-label="Backspace">⌫ Delete</button>
-        <button class="chip" type="button" data-key="Enter" aria-label="Enter">⏎ Enter</button>
-      </div>
-    </section>
+      <section id="volume-row" class="row row--3" aria-label="Volume">
+        <button class="btn" data-key="VolumeDown" data-repeat aria-label="Volume down" title="Volume down">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/></svg>
+        </button>
+        <button class="btn" data-key="VolumeMute" aria-label="Mute" title="Mute">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="m16 9 5 6M21 9l-5 6"/></svg>
+        </button>
+        <button class="btn" data-key="VolumeUp" data-repeat aria-label="Volume up" title="Volume up">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M12 5v14"/></svg>
+        </button>
+      </section>
 
-    <section class="card" aria-label="Search">
-      <form id="search-form" class="field" autocomplete="off">
-        <input id="search-input" type="search" enterkeyhint="search"
-               placeholder="Search Roku (movies, shows, actors)…" aria-label="Search keyword" maxlength="200">
-        <button class="chip" type="submit">Search</button>
-      </form>
-    </section>
+      <section class="row row--4" aria-label="Media">
+        <button class="btn" data-key="Rev" aria-label="Rewind" title="Rewind">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path class="fill" d="M11 6 3 12l8 6zM21 6l-8 6 8 6z"/></svg>
+        </button>
+        <button class="btn btn--accent" data-key="Play" aria-label="Play / pause" title="Play / pause">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path class="fill" d="M4 5v14l9-7z"/><path d="M16 6v12M20 6v12"/></svg>
+        </button>
+        <button class="btn" data-key="Fwd" aria-label="Fast forward" title="Fast forward">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path class="fill" d="M3 6l8 6-8 6zM13 6l8 6-8 6z"/></svg>
+        </button>
+        <button class="btn" data-key="InstantReplay" aria-label="Instant replay" title="Instant replay">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>
+        </button>
+      </section>
 
-    <button id="dashboard" class="btn btn--wide btn--accent" type="button">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
-      <span>Dashboard</span>
-    </button>
+    </div>
 
-    <section aria-label="Apps">
-      <div class="section-head">
-        <h2>Apps</h2>
-        <button id="apps-refresh" class="chip chip--ghost" type="button" aria-label="Reload apps">Reload</button>
-      </div>
-      <div id="apps" class="apps" role="list">
-        <p class="muted">Loading apps…</p>
-      </div>
-    </section>
+    <div class="pane" data-pane="keyboard">
+      <section class="card" aria-label="Keyboard and search">
+        <p class="card__title">Type on the TV</p>
+        <form id="text-form" class="field" autocomplete="off">
+          <input id="text-input" type="text" inputmode="text" enterkeyhint="send"
+                 placeholder="Type on the TV…" aria-label="Text to send" maxlength="500"
+                 autocapitalize="off" autocorrect="off" spellcheck="false">
+          <button class="chip" type="submit">Send</button>
+        </form>
+        <div class="field-actions">
+          <button class="chip" type="button" data-key="Backspace" data-repeat aria-label="Backspace"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5h11v14H9l-6-7z"/><path d="m12 9 5 6M17 9l-5 6"/></svg><span>Delete</span></button>
+          <button class="chip" type="button" data-key="Enter" aria-label="Enter"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 5v7H5"/><path d="m9 8-4 4 4 4"/></svg><span>Enter</span></button>
+        </div>
+        <p class="card__title card__title--split">Search movies &amp; shows</p>
+        <div class="type-chips" role="group" aria-label="Search type">
+          <button class="chip is-on" type="button" data-type="">Any</button>
+          <button class="chip" type="button" data-type="movie">Movie</button>
+          <button class="chip" type="button" data-type="tv-show">TV show</button>
+          <button class="chip" type="button" data-type="person">Actor</button>
+        </div>
+        <form id="search-form" class="field" autocomplete="off">
+          <input id="search-input" type="search" enterkeyhint="search"
+                 placeholder="Title or actor name…" aria-label="Search keyword" maxlength="200">
+          <button class="chip" type="submit">Search</button>
+        </form>
+      </section>
+    </div>
+    </div>
+
+    <div class="pane" data-pane="apps">
+      <section aria-label="Apps">
+        <div class="section-head">
+          <h2>Apps</h2>
+          <button id="apps-refresh" class="chip chip--ghost" type="button" aria-label="Reload apps">Reload</button>
+        </div>
+        <div id="apps" class="apps" role="list">
+          <p class="muted">Loading apps…</p>
+        </div>
+      </section>
+    </div>
   </main>
 
   <div id="toast" class="toast" role="alert" hidden>

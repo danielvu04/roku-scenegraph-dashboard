@@ -6,3 +6,9 @@ __pycache__/
 *.pyc
 generated_config.brs
 .DS_Store
+
+# personal backgrounds: never committed (may be copyrighted)
+roku-channel/local-bg/
+roku-channel/images/local_bg_*.jpg
+roku-channel/local-icons/
+roku-channel/images/app_icon_*.png

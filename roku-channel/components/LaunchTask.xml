@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  LaunchTask: asks the phone-remote bridge on the PC to launch an app. The Roku
+  refuses ECP launch requests from inside a channel (403), but the bridge is on
+  the LAN and can reach the Roku's ECP port. roUrlTransfer is task-only.
+-->
+<component name="LaunchTask" extends="Task">
+    <interface>
+        <field id="appId" type="string" />
+        <field id="bridgeUrl" type="string" />
+        <field id="result" type="string" />
+    </interface>
+    <script type="text/brightscript" uri="pkg:/components/LaunchTask.brs" />
+</component>

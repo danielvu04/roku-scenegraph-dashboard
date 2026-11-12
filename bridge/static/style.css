@@ -1,17 +1,20 @@
+@font-face { font-family: "Inter"; src: url("/fonts/Inter-Regular.otf") format("opentype"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Inter"; src: url("/fonts/Inter-Bold.otf") format("opentype"); font-weight: 700; font-display: swap; }
+
 :root {
-  --bg: #0e0c1c;
-  --bg-2: #17142b;
-  --surface: #1f1b38;
-  --surface-2: #2a2549;
+  --bg: #000000;
+  --bg-2: #0B0B0D;
+  --surface: #1C1C1E;
+  --surface-2: #2C2C2E;
   --border: rgba(255, 255, 255, 0.08);
-  --text: #ece9ff;
-  --muted: #9a94bd;
-  --accent: #a78bfa;
-  --accent-ink: #1a1033;
-  --ok: #4ade80;
-  --bad: #f87171;
+  --text: #FFFFFF;
+  --muted: rgba(235, 235, 245, 0.6);
+  --accent: #FFFFFF;
+  --accent-ink: #000000;
+  --ok: #30D158;
+  --bad: #FF453A;
   --warn: #fbbf24;
-  --radius: 18px;
+  --radius: 22px;
   --tap: 64px;
   --gap: 12px;
   --safe-top: env(safe-area-inset-top, 0px);
@@ -24,9 +27,9 @@
 
 html, body {
   margin: 0;
-  background: radial-gradient(120% 60% at 50% 0%, #2c1654 0%, var(--bg) 60%) fixed, var(--bg);
+  background: radial-gradient(120% 60% at 50% 0%, #1E293B 0%, var(--bg) 60%) fixed, var(--bg);
   color: var(--text);
-  font: 16px/1.4 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font: 16px/1.4 -apple-system, BlinkMacSystemFont, "SF Pro Text", Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: transparent;
   overscroll-behavior-y: contain;
@@ -130,7 +133,7 @@ svg .fill { fill: currentColor; stroke: none; }
   transform: scale(0.95);
   background: var(--surface-2);
 }
-.btn--accent.is-pressed, .btn--accent:active { background: #c4b5fd; }
+.btn--accent.is-pressed, .btn--accent:active { background: rgba(255, 255, 255, 0.78); }
 
 /* D-pad */
 .dpad {
@@ -166,9 +169,9 @@ svg .fill { fill: currentColor; stroke: none; }
   font-weight: 700;
   font-size: 20px;
   letter-spacing: 0.05em;
-  box-shadow: 0 4px 14px rgba(167, 139, 250, 0.35);
+  box-shadow: 0 4px 14px rgba(255, 255, 255, 0.12);
 }
-.dpad__ok.is-pressed, .dpad__ok:active { background: #c4b5fd; }
+.dpad__ok.is-pressed, .dpad__ok:active { background: rgba(255, 255, 255, 0.78); }
 .dpad__corner {
   position: absolute;
   width: 52px;
@@ -297,7 +300,7 @@ svg .fill { fill: currentColor; stroke: none; }
   animation: toast-in 160ms ease-out;
 }
 .toast[hidden] { display: none; }
-.toast--info { background: #1e2a3b; border-color: rgba(167, 139, 250, 0.5); color: var(--text); }
+.toast--info { background: #1e2a3b; border-color: rgba(255, 255, 255, 0.18); color: var(--text); }
 .toast span:empty { display: none; }
 @keyframes toast-in { from { transform: translateY(20px); opacity: 0; } to { transform: none; opacity: 1; } }
 
@@ -305,6 +308,120 @@ svg .fill { fill: currentColor; stroke: none; }
   .app { padding-top: calc(24px + var(--safe-top)); }
 }
 
+
+/* ---- Design pass: Apple dark mode (system greys, white primary, hairline borders) ---- */
+html, body {
+  background:
+    radial-gradient(80% 45% at 50% -5%, rgba(120, 140, 200, 0.14), transparent 70%),
+    var(--bg) fixed;
+}
+.btn, .card, .pill, .dpad__corner, .chip, .app-tile, .toast {
+  background: rgba(44, 44, 46, 0.62);
+  border: 0.5px solid rgba(255, 255, 255, 0.08);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  backdrop-filter: blur(20px) saturate(180%);
+  box-shadow: none;
+}
+.dpad { background: #1C1C1E; border: 0.5px solid rgba(255, 255, 255, 0.06); box-shadow: none; }
+.btn--accent, .dpad__ok { background: #FFFFFF; color: #000000; border-color: transparent; box-shadow: none; }
+.btn--accent.is-pressed, .btn--accent:active, .dpad__ok.is-pressed, .dpad__ok:active { background: rgba(255, 255, 255, 0.78); }
+.btn:active, .chip:active, .app-tile:active, .dpad__corner:active { background: rgba(72, 72, 74, 0.8); }
+.btn--power { color: var(--bad); }
+.chip--ghost { background: transparent; border-color: transparent; color: #0A84FF; }
+.pill--ok .dot { background: var(--ok); box-shadow: none; }
+.btn, .chip, .app-tile, .dpad__btn, .dpad__ok, .dpad__corner {
+  transition: transform 150ms ease, background-color 150ms ease;
+}
+.btn:active, .chip:active, .app-tile:active, .dpad__ok:active { transform: scale(0.96); }
+.chip { display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-weight: 600; }
+.chip svg { width: 18px; height: 18px; }
+.dpad__corner svg { width: 20px; height: 20px; }
+.title { font-size: 28px; font-weight: 700; letter-spacing: -0.02em; }
+.section-head h2 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; }
+.field input { background: rgba(118, 118, 128, 0.24); border: 0; }
+button:focus-visible, input:focus-visible { outline: 2px solid #FFFFFF; }
+
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; animation: none !important; }
 }
+
+#volume-row[hidden] { display: none; }
+
+/* Now playing line and section tabs (phone) */
+.now { margin: -6px 0 0; font-size: 14px; color: var(--muted); text-align: center; }
+.now[hidden] { display: none; }
+.tabs {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+.tab {
+  flex: 1;
+  min-height: 36px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--muted);
+  font-weight: 600;
+  font-size: 14px;
+}
+.tab.is-active { background: var(--surface-2); color: var(--text); }
+.pane { display: none; flex-direction: column; gap: 16px; }
+.pane.is-active { display: flex; }
+.apps { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.dpad { width: min(100%, 300px); }
+
+/* Wide screens (desktop browser): remote and keyboard on the left, apps on the right */
+@media (min-width: 900px) {
+  .app {
+    max-width: 1120px;
+    display: grid;
+    grid-template-columns: 400px minmax(0, 1fr);
+    column-gap: 64px;
+    align-items: start;
+  }
+  .app > .topbar, .app > .now { grid-column: 1 / -1; }
+  .tabs { display: none; }
+  .pane { display: flex; }
+  .remote-col { grid-column: 1; grid-row: 3; display: flex; flex-direction: column; gap: 16px; }
+  .remote-col > .pane { display: flex; }
+  .pane[data-pane="apps"] { grid-column: 2; grid-row: 3; align-self: start; }
+  .apps { grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); }
+  .app .section-head { margin-top: 0; }
+  .dpad { width: min(100%, 320px); }
+}
+
+.topbar__right { display: flex; align-items: center; gap: 8px; }
+#dashboard { min-height: 36px; }
+.btn--labeled { flex-direction: column; gap: 2px; }
+.btn--labeled span { font-size: 11px; color: var(--muted); font-weight: 500; }
+.card__title { margin: 0; font-size: 13px; font-weight: 600; color: var(--muted); }
+
+/* Header must fit a 320-390px phone without side scrolling */
+html, body { overflow-x: hidden; }
+.app { min-width: 0; }
+.topbar { flex-wrap: wrap; gap: 8px; }
+.topbar__right { min-width: 0; flex-wrap: nowrap; }
+.topbar__right .pill { min-width: 0; max-width: 100%; }
+.type-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+.type-chips .chip { min-height: 32px; padding: 0 12px; font-size: 13px; }
+.type-chips .chip.is-on { background: var(--surface-2); color: var(--text); }
+@media (max-width: 519px) { .hide-narrow { display: none; } }
+
+/* Keyboard tab: one plain section, no nested boxes */
+.pane[data-pane="keyboard"] .card { background: none; border: 0; padding: 0; gap: 12px; }
+.card__title--split { border-top: 0.5px solid var(--border); padding-top: 18px; margin-top: 6px; }
+
+/* Quieter secondary buttons: only the OK key and the primary action stay bright */
+.btn:not(.btn--accent):not(.btn--power), .dpad__btn {
+  background: rgba(118, 118, 128, 0.12);
+  border-color: transparent;
+  color: rgba(235, 235, 245, 0.78);
+}
+.dpad__btn { background: transparent; }
+
+/* Phone: the remote column is a transparent wrapper (desktop rule above applies at 900px+) */
+@media (max-width: 899px) { .remote-col { display: contents; } }

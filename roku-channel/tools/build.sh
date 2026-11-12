@@ -22,6 +22,7 @@ if [[ "${1:-}" == "--assets" ]] || ! ls images/bg_*.jpg >/dev/null 2>&1 || [[ ! 
     python3 tools/gen_assets.py
 fi
 
+python3 tools/prep_local_bg.py
 python3 tools/gen_config.py
 
 # Optional: validate with BrighterScript + bslint when `npm install` has been run.
@@ -32,7 +33,7 @@ fi
 
 mkdir -p dist
 rm -f dist/roku-couch.zip
-zip -9 -r -q dist/roku-couch.zip manifest source components images \
+zip -9 -r -q dist/roku-couch.zip manifest source components images fonts \
     -x '*.DS_Store' -x '*/.*' -x '*~'
 
 echo "build: wrote dist/roku-couch.zip ($(wc -c < dist/roku-couch.zip | tr -d ' ') bytes)"

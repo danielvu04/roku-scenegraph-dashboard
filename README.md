@@ -38,6 +38,7 @@ Edit `config.json`:
 | `location` (`name`, `lat`, `lon`) | channel | Place to show weather for |
 | `units` | channel | `"fahrenheit"` or `"celsius"` |
 | `clock_24h` | channel | `true` for a 24-hour clock |
+| `show_volume_buttons` | remote | `false` hides the volume row on the phone remote (default `true`). Use `false` if the TV ignores volume keys. |
 | `background_seconds` | channel | Seconds between background changes (10 to 3600) |
 | `roku_ip` | bridge | Leave empty to auto-discover the Roku over SSDP, or set it (e.g. `"192.168.1.50"`) |
 | `bridge_port` | bridge | Port for the phone remote (default 8787) |
